@@ -4,14 +4,14 @@ const ServiceClass = require('../../../services/article-service');
 // GET https://vercel-serverless-hujanais.vercel.app/api/cxkm/articles/5
 module.exports = async (req, res) => {
     const service = new ServiceClass();
-    let articleId;
     let article;
     let document;
 
     try {
+        const { articleId } = req.query;
+
         switch (req.method) {
             case 'GET':
-                const { articleId } = req.query;
                 let response = await service.get(articleId);
                 res.json(response[0]);
                 break;
@@ -26,7 +26,6 @@ module.exports = async (req, res) => {
                 res.json(document);
                 break;
             case 'DELETE':
-                articleId = req.query['articleId'];
                 document = await service.delete(articleId);
                 res.json(document);
                 break;

@@ -15,7 +15,7 @@ vercel --prod => push to production
 
 ## End Points
 
-To handle path segments like http://myserver:5555/cxkm/articles/:articleId
+To handle path segments like http://myserver:5555/api/cxkm/articles/:articleId
 You create a folder structure like this,
 api/cxkm/articles/[articleId].js => the [articleId] tells vercel that there is a parameter called articleId
 
@@ -40,3 +40,28 @@ GET http://vercel-serverless/resources/images/blah.png => everything under publi
 
 vercel => push to staging area for testing. Use the staging area for your testing before committing to production.
 vercel --prod => push to production
+
+## REST API and Endpoints.
+
+// Get the composite JSON file for en-gb language pack.
+GET https://cms-serverless.vercel.app/api/cxkm/en-gb
+
+// Get a document of articleId=100
+GET https://cms-serverless.vercel.app/api/cxkm/article/100
+
+// Create a document
+POST https://cms-serverless.vercel.app/api/cxkm/article
+{
+"articleId": "article-id not to be confused with the primary key in mongodb",
+"body": "Text to be inserted into database"
+}
+
+// Update a document
+PUT https://cms-serverless.vercel.app/api/cxkm/article
+{
+"articleId": "article-id not to be confused with the primary key in mongodb",
+"body": "Text to be inserted into database"
+}
+
+// Delete a document with articleId=50000
+DELETE https://cms-serverless.vercel.app/api/cxkm/article/50000
