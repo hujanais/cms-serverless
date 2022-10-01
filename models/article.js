@@ -1,9 +1,15 @@
 const mongoose = require('mongoose');
-const collectionName = process.env.ARTICLES_COLLECTION_NAME;
+const collectionName = process.env.COLLECTION_NAME;
 
 const stSchema = new mongoose.Schema({
-    articleId: { type: String },
-    body: { type: String },
+  discontinued: { type: Boolean },
+  family: { type: String },
+  gpio: { type: String },
+  memory: { type: String },
+  model: { type: String },
+  released: { type: String },
+  soc: { type: String },
+  wireless: { type: Boolean },
 });
 
 module.exports = mongoose.model(collectionName, stSchema, collectionName);
