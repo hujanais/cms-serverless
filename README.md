@@ -1,77 +1,87 @@
-## Hosting NodeJS server on Vercel Serverless
+### Overview
 
-### Step by Step
+For server applications that are stateless and transactional, a serverless architecuture is an excellent hosting option as compared to a full-blown NodeJS or .NETCore server. For this walkthrough, I am presenting the ability to create a RESTFUL api that connects to a backend database and hosting for static assets like files/images with a Vercel serverless.
 
-1.  Create vercel.json file to handle CORS.
-2.  Create an api folder where all endpoints will go.
-    Important to put any endpoint js file into the api folder. 1 file per endpoint and it can handle GET/POST verbs.
-    each endpoint will be in /api/xxx
-    Environment variables must be configured on the vercel project settings webpage.
+### Initial steps.
 
-## Setup Vercel on your computer
+1. npm init and create a new project.
+2. Create vercel.json file to handle CORS.
+3. Setup .env file using dotenv like a normal nodejs application.
+4. Create an /api folder where all endpoints will go. The key requirement is that the endpoint will be determined by the folder structure. All endpoints shall be placed under the /api folder.
 
-npm i -g vercel
-vercel => the first time you run this, there is a wizard to follow.
-vercel => push to staging area for testing.
-vercel --prod => push to production
-! development tip. during development, run your application locally using vercel dev
+The key requirement is to put any endpoint js file into the api folder. 1 file per endpoint and it can handle GET/POST verbs. each endpoint will be in /api/xxx. Environment variables must be configured on the vercel project settings webpage.
 
-## Example of CRUD endpoints used against a mongo-db database
+### Setup Vercel on your computer
 
-## End Points
+1. npm i -g vercel => the first time you run this, there is a wizard to follow.
+2. vercel => push to staging area for testing.
+3. vercel --prod => push to production
+4. ! development tip. during development, run your application locally using vercel dev
 
-To handle path segments like http://myserver:5555/api/cxkm/articles/:articleId
-You create a folder structure like this,
-api/cxkm/articles/[articleId].js => the [articleId] tells vercel that there is a parameter called articleId
+### CRUD endpoints used against a mongo-db database
 
-## MongoDB-Mongoose access / Services
+| endpoint                      | notes                      |
+| ----------------------------- | -------------------------- |
+| GET api/cxkm/products         | get a list of all products |
+| GET api/cxkm/products/{id}    | get a product by id        |
+| PUT api/cxkm/products/{id}    | update the product by id   |
+| DELETE api/cxkm/products/{id} | delete the product by id   |
+| POST api/cxkm/products        | create a new product       |
 
-Not talking about this in detail but here is the general architecture.
-The endpoints will be call into a service or controller which is saved under the services folder.
-The models folder contains the MongoDB schema.
+To acheive this endpoint design, here is the associated folder structure. Please take special note of the 2 files under products. This is needed because
 
-## Reading local json file in vercel serverless.
+- api
+  - cxkm
+    - products
+      - [productId].js [used for GET/DELETE/PUT
+      - products.js. [used for GET(all)/POST
 
-Yes you can use local files. In my example, I created a \_files folder and accessed it using fs package from article-service.js.
+### Serving out static resources
 
-## publishing static assets.
+There are instances where you want to have an endpoint to just get a static resource like an image. Vercel handles this by having you put all our resources under a public directory. You can then access the resource with GET /resources/images/blah.png
 
-https://vercel.com/knowledge/how-can-i-use-files-in-serverless-functions
-You must create a root public folder and then everything is relative to this folder.
-example: public/resources/images/blah.png
-GET http://vercel-serverless/resources/images/blah.png => everything under public folder will be published.
+example folder structure
 
-## Push changes to Vercel.
+- public
+  - resources
+    - images
+      - laser.png
+      - gloves.png
+      - bio.png
+      - ...
 
-vercel => push to staging area for testing. Use the staging area for your testing before committing to production.
-vercel --prod => push to production
+### Reading local files
 
-## REST API endpoints for database
+Yes you can use local files. In my example, I created a \_files folder and accessed it using fs package from article-service.js. You can just access the files normally using node-fs.
 
-### get a list of all products
+|                                   |                     |
+| --------------------------------- | ------------------- |
+| GET /api/cxkm/articles/{language} | get data from files |
 
-GET api/cxkm/products
+Required file structure
 
-### get a product by id
+- api
+  - cxkm
+    - articles
+      - [language].js
+      -
 
-GET api/cxkm/products/{id}
+### CORS
 
-### update the product by id
+This is a catch all CORS to get things going but obviously you would want to becareful to prevent unauthorized usage but good enough for a demo.
 
-PUT api/cxkm/products/{id}
-
-### delete the product by id
-
-DELETE api/cxkm/products/{id} --data { "family": "AWESOME Product 2",
-"model": "B",
-"soc": "BCM2835", ...}
-
-### create a new product
-
-POST api/cxkm/products --data { "family": "A new product",
-"model": "Z",
-"soc": "ZZZ3123", ...}
-
-## REST API endpoints for static resources
-
-GET /api/cxkm/articles/{language} // es or en-gb
+1. Create a vercel.json file with the following entry in the root of the project.
+<pre>
+	{
+		"headers": [
+			{ 
+				"source": "/api/(.*)",
+				"headers": [ 
+					{ "key": "Access-Control-Allow-Credentials", "value": "true" },
+					{ "key": "Access-Control-Allow-Origin", "value": "*" },
+					{ "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+					{ "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+				] }
+		]
+	}
+</pre>
