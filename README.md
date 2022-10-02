@@ -14,6 +14,9 @@ npm i -g vercel
 vercel => the first time you run this, there is a wizard to follow.
 vercel => push to staging area for testing.
 vercel --prod => push to production
+! development tip. during development, run your application locally using vercel dev
+
+## Example of CRUD endpoints used against a mongo-db database
 
 ## End Points
 
@@ -43,27 +46,32 @@ GET http://vercel-serverless/resources/images/blah.png => everything under publi
 vercel => push to staging area for testing. Use the staging area for your testing before committing to production.
 vercel --prod => push to production
 
-## REST API and Endpoints.
+## REST API endpoints for database
 
-// Get the composite JSON file for en-gb language pack.
-GET https://cms-serverless.vercel.app/api/cxkm/en-gb
+### get a list of all products
 
-// Get a document of articleId=100
-GET https://cms-serverless.vercel.app/api/cxkm/article/100
+GET api/cxkm/products
 
-// Create a document
-POST https://cms-serverless.vercel.app/api/cxkm/article
-{
-"articleId": "article-id not to be confused with the primary key in mongodb",
-"body": "Text to be inserted into database"
-}
+### get a product by id
 
-// Update a document
-PUT https://cms-serverless.vercel.app/api/cxkm/article
-{
-"articleId": "article-id not to be confused with the primary key in mongodb",
-"body": "Text to be inserted into database"
-}
+GET api/cxkm/products/{id}
 
-// Delete a document with articleId=50000
-DELETE https://cms-serverless.vercel.app/api/cxkm/article/50000
+### update the product by id
+
+PUT api/cxkm/products/{id}
+
+### delete the product by id
+
+DELETE api/cxkm/products/{id} --data { "family": "AWESOME Product 2",
+"model": "B",
+"soc": "BCM2835", ...}
+
+### create a new product
+
+POST api/cxkm/products --data { "family": "A new product",
+"model": "Z",
+"soc": "ZZZ3123", ...}
+
+## REST API endpoints for static resources
+
+GET /api/cxkm/articles/{language} // es or en-gb

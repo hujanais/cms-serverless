@@ -1,5 +1,9 @@
-// Get all the files under a certain language and merge the json objects into a single composite object.
-getJson(language) {
+const path = require('path');
+const { readFileSync, readdirSync } = require('fs');
+
+module.exports = class ArticleService {
+  // Get all the files under a certain language and merge the json objects into a single composite object.
+  getJson(language) {
     const jsonArr = [];
     const files = readdirSync(path.join(__dirname, '../_files', language), { withFileTypes: true });
     files.forEach((file) => {
@@ -8,5 +12,6 @@ getJson(language) {
     });
 
     // Merge all json objects into a single one.
-    return Object.assign({}, ...jsonArr);
+    return [...jsonArr];
   }
+};

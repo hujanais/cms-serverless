@@ -1,5 +1,5 @@
 require('dotenv').config();
-const ServiceClass = require('../../../services/product-service');
+const ServiceClass = require('../../../services/article-service');
 
 // GET https://vercel-serverless-hujanais.vercel.app/api/cxkm/en-gb
 module.exports = async (req, res) => {
@@ -9,7 +9,6 @@ module.exports = async (req, res) => {
     switch (req.method) {
       case 'GET':
         const { language } = req.query;
-
         res.json({ errorCode: 0, message: 'ok', data: service.getJson(language) });
         break;
       default:

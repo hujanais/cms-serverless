@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
-const ArticleData = require('../models/article');
-const path = require('path');
-
-const { readFileSync, readdirSync } = require('fs');
+const ProductData = require('../models/product');
 
 module.exports = class ArticleService {
   /**
@@ -13,7 +10,7 @@ module.exports = class ArticleService {
     await mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
     const filter = { _id: mongoose.Types.ObjectId(productId) };
 
-    const documents = await ArticleData.find(filter, null, null);
+    const documents = await ProductData.find(filter, null, null);
 
     await mongoose.disconnect();
 
@@ -24,7 +21,7 @@ module.exports = class ArticleService {
     await mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
     const filter = {};
-    const documents = await ArticleData.find(filter);
+    const documents = await ProductData.find(filter);
 
     await mongoose.disconnect();
 
@@ -35,7 +32,7 @@ module.exports = class ArticleService {
   async create(article) {
     await mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    const documents = await ArticleData.create(article);
+    const documents = await ProductData.create(article);
 
     await mongoose.disconnect();
 
@@ -52,7 +49,7 @@ module.exports = class ArticleService {
   async delete(productId) {
     await mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    const document = await ArticleData.findOneAndRemove({ _id: mongoose.Types.ObjectId(productId) });
+    const document = await ProductData.findOneAndRemove({ _id: mongoose.Types.ObjectId(productId) });
 
     await mongoose.disconnect();
 
@@ -71,7 +68,7 @@ module.exports = class ArticleService {
     const update = article;
     const options = { new: true }; // this is required to return the modified document.
 
-    const document = await ArticleData.findOneAndUpdate(filter, update, options);
+    const document = await ProductData.findOneAndUpdate(filter, update, options);
 
     await mongoose.disconnect();
 

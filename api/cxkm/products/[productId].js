@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
         break;
       default:
         throw new Error(`${req.method} is not allowed`);
+        c;
     }
   } catch (ex) {
     res.status(500).json(`catch - ${ex}`);
